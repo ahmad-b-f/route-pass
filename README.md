@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Route Pass
 
 Day-based transport verification for university bus fleets. Verifies, per trip, whether a
@@ -126,3 +127,6 @@ Admin → Settings → Day colors lets you set (or auto-generate) a distinct col
 This color is used as the background of both the boarding-time verify/deny screen and the
 receipt saved in the student's "My receipts" history — the whole point being that a
 screenshot from a previous day is visually, immediately wrong.
+=======
+# route-pass
+>>>>>>> bddd2fa1ca9e0adf2f9ec8ad435542b8232059eb

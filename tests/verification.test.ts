@@ -73,10 +73,9 @@ describe("evaluateCheckIn — core decision matrix", () => {
   });
 
   it("Sunday is never a travel day even if somehow present in paidDays", () => {
-    // @ts-expect-error deliberately passing an out-of-range day to prove the guard holds
     const result = evaluateCheckIn({
       feeActive: true,
-      paidDays: ["Sun"],
+      paidDays: ["Sun"] as any,
       today: "Sun",
       alreadyUsedToday: false,
       signatureValid: true

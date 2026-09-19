@@ -32,7 +32,7 @@ export default function StudentPassPage() {
   useEffect(() => {
     const s = getCachedStudent();
     if (!s) {
-      router.replace("/student");
+      router.replace("/");
       return;
     }
     setStudent(s);
@@ -140,7 +140,7 @@ export default function StudentPassPage() {
 
   function logout() {
     clearCachedStudent();
-    router.replace("/student");
+    router.replace("/");
   }
 
   if (!student) return null;

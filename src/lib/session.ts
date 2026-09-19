@@ -2,6 +2,27 @@ import { Bus, Student } from "./types";
 
 const SESSION_KEY = "routepass_student_session";
 const BUS_KEY = "routepass_student_bus";
+const ADMIN_AUTH_KEY = "routepass_admin_auth";
+
+export function isAdminAuthenticated(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(ADMIN_AUTH_KEY) === "true";
+}
+
+export function setAdminAuth(authenticated: boolean) {
+  if (typeof window === "undefined") return;
+  if (authenticated) {
+    window.localStorage.setItem(ADMIN_AUTH_KEY, "true");
+  } else {
+    window.localStorage.removeItem(ADMIN_AUTH_KEY);
+  }
+}
+
+export function clearAdminAuth() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(ADMIN_AUTH_KEY);
+}
+
 
 /**
  * Caches the logged-in student's own record locally so the boarding

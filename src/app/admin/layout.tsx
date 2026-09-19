@@ -1,13 +1,19 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   BusIcon,
   RouteIcon,
   StudentIcon,
   ChartIcon,
   ReceiptIcon,
-  SettingsIcon
+  SettingsIcon,
+  LogoutIcon
 } from "@/components/icons";
 import { ConfigBanner } from "@/components/admin/ConfigBanner";
+import { isAdminAuthenticated, setAdminAuth } from "@/lib/session";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: ChartIcon },
@@ -19,12 +25,34 @@ const navItems = [
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!isAdminAuthenticated()) {
+      router.replace("/");
+    } else {
+      setAuthorized(true);
+    }
+  }, [router]);
+
+  function handleLogout() {
+    setAdminAuth(false);
+    router.replace("/");
+  }
+
+  if (!authorized) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen flex bg-paper">
       <aside className="w-56 border-r border-line bg-paper-soft px-4 py-6 hidden md:flex md:flex-col">
-        <div className="mb-8 px-2">
-          <div className="font-mono text-[10px] tracking-wide text-ink-soft">ROUTE PASS</div>
-          <div className="font-semibold text-ink">Admin Portal</div>
+        <div className="mb-8 px-2 flex items-center justify-between">
+          <div>
+            <div className="font-mono text-[10px] tracking-wide text-ink-soft">ROUTE PASS</div>
+            <div className="font-semibold text-ink">Admin Portal</div>
+          </div>
         </div>
         <nav className="flex flex-col gap-1">
           {navItems.map((item) => {
@@ -41,22 +69,33 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             );
           })}
         </nav>
-        <div className="mt-auto pt-6">
-          <Link href="/" className="font-mono text-[11px] text-ink-soft hover:text-ink">
-            &larr; Back to role select
-          </Link>
+        <div className="mt-auto pt-6 border-t border-line">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 font-mono text-[11px] text-ink-soft hover:text-signal-denied transition-colors w-full px-2 py-1"
+          >
+            <LogoutIcon size={15} />
+            Sign out (BlackWood)
+          </button>
         </div>
       </aside>
 
       <div className="flex-1 min-w-0">
-        <div className="md:hidden border-b border-line bg-paper-soft px-4 py-3 flex items-center gap-2">
+        <div className="md:hidden border-b border-line bg-paper-soft px-4 py-3 flex items-center justify-between">
           <span className="font-semibold text-ink">Route Pass — Admin</span>
+          <button
+            onClick={handleLogout}
+            className="text-ink-soft hover:text-signal-denied text-xs flex items-center gap-1 font-mono"
+          >
+            <LogoutIcon size={16} />
+            Sign out
+          </button>
         </div>
-        <div className="p-4 md:p-8 max-w-5xl mx-auto">
+        <div className="p-4 md:p-8 max-w-5xl mx-auto pb-20 md:pb-8">
           <ConfigBanner />
           {children}
         </div>
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-paper-soft border-t border-line flex justify-between px-2 py-2">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-paper-soft border-t border-line flex justify-between px-2 py-2 z-10">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (

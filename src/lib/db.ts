@@ -111,6 +111,26 @@ export async function findStudentByPhone(phone: string): Promise<Student | null>
   return (data as Student) ?? null;
 }
 
+export async function findStudentByIdentifier(identifier: string): Promise<Student | null> {
+  const trimmed = identifier.trim();
+  const c = client();
+
+  // 1. Search by exact phone number
+  const { data: byPhone } = await c.from("students").select("*").eq("phone", trimmed).maybeSingle();
+  if (byPhone) return byPhone as Student;
+
+  // 2. Search by student name (case-insensitive)
+  const { data: byName } = await c.from("students").select("*").ilike("name", trimmed).maybeSingle();
+  if (byName) return byName as Student;
+
+  // 3. Search by roll number (case-insensitive)
+  const { data: byRoll } = await c.from("students").select("*").ilike("roll_no", trimmed).maybeSingle();
+  if (byRoll) return byRoll as Student;
+
+  return null;
+}
+
+
 /* --------------------------- Scan logs ---------------------------- */
 
 export async function insertScanLog(entry: Omit<ScanLog, "id">): Promise<void> {
