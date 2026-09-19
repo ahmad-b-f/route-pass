@@ -1,16 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { findStudentByIdentifier, getBusById, NotConfiguredError } from "@/lib/db";
 import { hashPassword } from "@/lib/hash";
-import {
-  setCachedStudent,
-  setCachedBus,
-  getCachedStudent,
-  isAdminAuthenticated,
-  setAdminAuth
-} from "@/lib/session";
+import { setCachedStudent, setCachedBus, setAdminAuth } from "@/lib/session";
 import { Field, Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { BusIcon, StudentIcon } from "@/components/icons";
@@ -21,14 +15,6 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    if (isAdminAuthenticated()) {
-      router.replace("/admin");
-    } else if (getCachedStudent()) {
-      router.replace("/student/pass");
-    }
-  }, [router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,7 +28,7 @@ export default function Home() {
     setError(null);
 
     try {
-      // 1. Check for Admin Credentials
+      // 1. Check for Admin Credentials (BlackWood / cropee@12354)
       if (trimmedName.toLowerCase() === "blackwood" && password === "cropee@12354") {
         setAdminAuth(true);
         router.push("/admin");
